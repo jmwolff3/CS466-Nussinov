@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Nussinov Solver{% endblock %}
+{% block content %}
+<div>
+  <div><h1>Nussinov Solver</h1></div>
+
+  <div class='container'>
+    <div class='row'>
+      <div class='col-6'>
+        <form id='sequence_form'>
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <label for="sequence">Input Sequence: </label>
+          <input type="text" name="sequence" id="sequence" value="">
+        </form>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col-3'>
+        <button type="button" class='btn btn-secondary' id='solve' onclick="call_solver()">Generate Solution</button>
+      </div>
+      <div class='col-4'></div>
+    </div>
+  </div>
+  <div class='container container-fluid'>
+    <div class='row' id='results'>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function call_solver() {
+    vars = $('#sequence_form').serializeArray();
+    sequence = $('#sequence')[0].value.toUpperCase()
+    $('#results').children().empty()
+    $.ajax({
+      type: "POST",
+      url: '/solve',
+      data: vars,
+      success: function(data) {
+        console.log(data);
+        if (data['success'] == false)
+          alert(data['response'])
+        else {
+          // make a chart
+          let table = document.createElement('table');
+          table.className = 'table table-responsive';
+
+          for (let row of data['matrix']) {
+            table.insertRow();
+            for (let cell of row) {
+              let newCell = table.rows[table.rows.length-1].insertCell();
+              newCell.textContent = cell;
+            }
+          }
+          $('#results').append(table);
+        }
+      }
+    });
+  }
+</script>
+{% endblock %}
