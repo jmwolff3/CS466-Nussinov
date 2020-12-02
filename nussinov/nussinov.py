@@ -90,7 +90,7 @@ def backtrace(sequence, M, P, i, j):
                     if M[i][j] == M[k+1][j-1]+1:
                         if (k,j) not in P:
                             P.append((k,j))
-                        #backtrace(sequence, M, P, k+1, j-1)
+                        backtrace(sequence, M, P, k+1, j-1)
                 if M[i][j] == M[i, k-1] + M[k+1][j-1] + 1:
                     if (k,j) not in P:
                         P.append((k,j))
