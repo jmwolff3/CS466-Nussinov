@@ -25,4 +25,4 @@ def solve():
     return jsonify({'success': True, 'matrix': solution_matrix.tolist(), 'sequence': sequence, 'solution': solution, 'optimal_structure': optimal_structure})
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', port=5000)
