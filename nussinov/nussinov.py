@@ -96,6 +96,7 @@ def backtrace(sequence, M, P, i, j):
                         P.append((k,j))
                     backtrace(sequence, M, P, i, k-1)
                     backtrace(sequence, M, P, k+1, j-1)
+                    break;
 
 def structure_output(sequence, P):
     structure = ["." for _ in range(len(sequence))]
