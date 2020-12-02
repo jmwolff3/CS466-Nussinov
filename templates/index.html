@@ -22,6 +22,10 @@
     </div>
   </div>
   <div class='container container-fluid'>
+    <h2>Optimal Structure</h2>
+    <div class='row' id='optimal'>
+    </div>
+    <h2>Table</h2>
     <div class='row' id='results'>
     </div>
   </div>
@@ -31,8 +35,9 @@
 <script>
   function call_solver() {
     vars = $('#sequence_form').serializeArray();
-    sequence = $('#sequence')[0].value.toUpperCase()
-    $('#results').children().empty()
+    sequence = $('#sequence')[0].value.toUpperCase();
+    $('#results').children().empty();
+    $('#optimal').children().empty();
     $.ajax({
       type: "POST",
       url: '/solve',
@@ -42,7 +47,21 @@
         if (data['success'] == false)
           alert(data['response'])
         else {
-          // make a chart
+          let optimal_table = document.createElement('table');
+          optimal_table.className = 'table table-responsive';
+          optimal_table.insertRow()
+          for (let cell of data['sequence']) {
+            let newCell = optimal_table.rows[optimal_table.rows.length-1].insertCell();
+            newCell.textContent = cell;
+          }
+          optimal_table.insertRow();
+          for (let cell of data['optimal_structure']) {
+            let newCell = optimal_table.rows[optimal_table.rows.length-1].insertCell();
+            newCell.textContent = cell;
+          }
+          $('#optimal').append(optimal_table);
+
+          
           let table = document.createElement('table');
           table.className = 'table table-responsive';
 
