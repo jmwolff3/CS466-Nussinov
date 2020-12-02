@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Summary
+"""
+    Runs Nussinov's Algorithm to find optimal substructure for RNA sequences
 """
 # @Author: jmwolff3
 
@@ -9,26 +10,29 @@ from os import path
 
 
 def setParser():
-    """Summary
+    """
+    Argument Parser for the nussinov program
     
     Returns:
-        TYPE: Description
+        parser: argument parser
     """
     parser = argparse.ArgumentParser(prog="Nussinov Algorithm Solver", description="A program that runs Nussinov's Algorithm on a given RNA strand and returns the most viable parings.")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-f", "--filepath", help="the path to a text file with a sequence")
     group.add_argument("-s", "--sequence", help="the RNA sequence to evaluate")
+    parser.add_argument("-v", "--verbose", action="store_true", help="More verbose output")
     return parser
 
 
 def getSequence(args):
-    """Summary
+    """
+    Takes passed arguments from script and loads the sequence from file or from input string
     
     Args:
-        args (TYPE): Description
+        args (args): Function Arguments
     
     Returns:
-        TYPE: Description
+        sequence (string): sequence string or None
     """
     sequence = args.sequence
 
@@ -42,21 +46,34 @@ def getSequence(args):
                 return None
     return sequence
 
-def checkSequence(sequence):
-    """Summary
+def isSequenceValid(sequence):
+    """
+    Validates the sequence contains only valid strings
     
     Args:
-        sequence (TYPE): Description
+        sequence (string): sequence string
     
     Returns:
-        TYPE: Description
+        boolean: True if only allowed characters, False if None or uses other characters
     """
     if not sequence:
         return False
     allowed_chars = set('GCAU')
     return set(sequence).issubset(allowed_chars)
 
+
 def cost_function(a, b):
+    """
+    Determines the cost associated with a pair, 1 if in valid pairs, else 0
+    This function gives 1 cost to UG pairs as well
+
+    Args:
+        a (character): first character in pair
+        b (character): second character in pair
+
+    Returns:
+        int: 1 if in valid pairs else 0
+    """
     pairs = [('G', 'C'), ('C', 'G'), ('A', 'U'), ('U', 'A'), ('G', 'U'), ('U', 'G')]
     
     if (a, b) in pairs:
@@ -64,6 +81,15 @@ def cost_function(a, b):
     return 0
 
 def classicalNussinov(sequence):
+    """
+    Nussinov's Algorithm
+
+    Args:
+        sequence (string): the sequence to run the algorithm on
+
+    Returns:
+        M (Matrix): a nxn matrix contianing the scores for each index
+    """
     len_seq = len(sequence)
     M = np.zeros((len_seq, len_seq))
 
@@ -77,6 +103,19 @@ def classicalNussinov(sequence):
     return M
 
 def backtrace(sequence, M, P, i, j):
+    """
+    The backtrace that generates the optimal structure
+
+    Args:
+        sequence (string): The sequence string
+        M (Matrix): the scoring matrix
+        P (Array): an array of pairs of indices
+        i (int): starting value
+        j (int): ending value
+
+    Returns:
+        None
+    """
     if j <= i:
         return
 
@@ -99,6 +138,16 @@ def backtrace(sequence, M, P, i, j):
                     break;
 
 def structure_output(sequence, P):
+    """
+    Function to create the structure string from the matrices
+
+    Args:
+        sequence (string): The sequence string
+        P (array): The array of indices
+
+    Returns:
+        (string): The string of the substruture in dot bracket notation
+    """
     structure = ["." for _ in range(len(sequence))]
     for pair in P:
         structure[pair[0]] = "("
@@ -106,25 +155,25 @@ def structure_output(sequence, P):
     return "".join(structure)
 
 def main():
-    """Summary
-    
-    Returns:
-        TYPE: Description
-    """
     parser = setParser()
     args = parser.parse_args()
+    verbose = args.verbose
+
 
     sequence = getSequence(args)
-    if not checkSequence(sequence):
+    if not isSequenceValid(sequence):
         print("Your sequence is invalid.")
         return -1
 
     M = classicalNussinov(sequence)
     pairs = []
     backtrace(sequence, M, pairs, 0, len(sequence)-1)
+
     print(sequence)
     print(structure_output(sequence, pairs))
 
+    if verbose:
+        print(M)
 
     return
 

@@ -19,7 +19,6 @@ class TestGetSequence(unittest.TestCase):
 
     def test_filepath(self):
         self.args.filepath = os.path.join(pathlib.Path().absolute(), 'tests', 'test_filepath.txt')
-        print(self.args.filepath)
         self.assertEqual(getSequence(self.args), "GCAU")
     
     def test_bad_filepath(self):
