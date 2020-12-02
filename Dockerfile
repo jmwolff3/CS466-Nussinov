@@ -1,4 +1,4 @@
-FROM python3.9
+FROM python:3.8-slim-buster
 
 LABEL Author="John M. Wolff"
 LABEL version="0.0.1"
@@ -16,4 +16,4 @@ RUN pip install --upgrade pip && \
 ADD . /app
 
 EXPOSE 5000
-CMD flask run --host 0.0.0.0
+CMD python flask_app.py
