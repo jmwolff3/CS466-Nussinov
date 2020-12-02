@@ -16,4 +16,4 @@ RUN pip install --upgrade pip && \
 ADD . /app
 
 EXPOSE 5000
-CMD python flask_app.py
+CMD python flask_app.py --host=0.0.0.0
