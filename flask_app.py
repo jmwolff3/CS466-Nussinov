@@ -11,12 +11,12 @@ def index():
 
 @app.route('/solve', methods=['POST'])
 def solve():
-    from nussinov.nussinov import validSequenceString, classicalNussinov, backtrace, structure_output
+    from nussinov.nussinov import isSequenceValid, classicalNussinov, backtrace, structure_output
     sequence = request.values.get('sequence', None)
     if sequence is None:
         return jsonify({'success': False, 'response': 'Please enter a sequence.'})
     sequence = sequence.upper()
-    if not validSequenceString(sequence):
+    if not isSequenceValid(sequence):
         return jsonify({'success': False, 'response': 'Your sequence contains invalid characters.'}) # return error that sequence is invalid
     solution_matrix = classicalNussinov(sequence)
     solution = []

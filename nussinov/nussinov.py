@@ -12,11 +12,14 @@ from os import path
 def setParser():
     """
     Argument Parser for the nussinov program
-    
+
     Returns:
         parser: argument parser
     """
-    parser = argparse.ArgumentParser(prog="Nussinov Algorithm Solver", description="A program that runs Nussinov's Algorithm on a given RNA strand and returns the most viable parings.")
+    parser = argparse.ArgumentParser(
+        prog="Nussinov Algorithm Solver",
+        description="A program that runs Nussinov's Algorithm on a given RNA strand and returns the most viable parings."
+    )
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-f", "--filepath", help="the path to a text file with a sequence")
     group.add_argument("-s", "--sequence", help="the RNA sequence to evaluate")
@@ -27,10 +30,10 @@ def setParser():
 def getSequence(args):
     """
     Takes passed arguments from script and loads the sequence from file or from input string
-    
+
     Args:
         args (args): Function Arguments
-    
+
     Returns:
         sequence (string): sequence string or None
     """
@@ -46,13 +49,14 @@ def getSequence(args):
                 return None
     return sequence
 
+
 def isSequenceValid(sequence):
     """
     Validates the sequence contains only valid strings
-    
+
     Args:
         sequence (string): sequence string
-    
+
     Returns:
         boolean: True if only allowed characters, False if None or uses other characters
     """
@@ -75,10 +79,11 @@ def cost_function(a, b):
         int: 1 if in valid pairs else 0
     """
     pairs = [('G', 'C'), ('C', 'G'), ('A', 'U'), ('U', 'A'), ('G', 'U'), ('U', 'G')]
-    
+
     if (a, b) in pairs:
         return 1
     return 0
+
 
 def classicalNussinov(sequence):
     """
@@ -102,6 +107,7 @@ def classicalNussinov(sequence):
             M[i][j] = temp
     return M
 
+
 def backtrace(sequence, M, P, i, j):
     """
     The backtrace that generates the optimal structure
@@ -121,21 +127,22 @@ def backtrace(sequence, M, P, i, j):
 
     if M[i][j] == M[i][j-1]:
         backtrace(sequence, M, P, i, j-1)
-    
+
     else:
         for k in range(i, j):
             if cost_function(sequence[k], sequence[j]):
                 if k-1 < 0:
                     if M[i][j] == M[k+1][j-1]+1:
-                        if (k,j) not in P:
-                            P.append((k,j))
+                        if (k, j) not in P:
+                            P.append((k, j))
                         backtrace(sequence, M, P, k+1, j-1)
                 if M[i][j] == M[i, k-1] + M[k+1][j-1] + 1:
-                    if (k,j) not in P:
-                        P.append((k,j))
+                    if (k, j) not in P:
+                        P.append((k, j))
                     backtrace(sequence, M, P, i, k-1)
                     backtrace(sequence, M, P, k+1, j-1)
-                    break;
+                    break
+
 
 def structure_output(sequence, P):
     """
@@ -154,11 +161,11 @@ def structure_output(sequence, P):
         structure[pair[1]] = ")"
     return "".join(structure)
 
+
 def main():
     parser = setParser()
     args = parser.parse_args()
     verbose = args.verbose
-
 
     sequence = getSequence(args)
     if not isSequenceValid(sequence):
