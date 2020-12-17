@@ -36,8 +36,8 @@
   function call_solver() {
     vars = $('#sequence_form').serializeArray();
     sequence = $('#sequence')[0].value.toUpperCase();
-    $('#results').children().empty();
-    $('#optimal').children().empty();
+    $('#results').empty();
+    $('#optimal').empty();
     $.ajax({
       type: "POST",
       url: '/solve',
