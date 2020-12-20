@@ -8,6 +8,7 @@ import argparse
 import numpy as np
 from os import path
 
+UNCOMMON = False
 
 def setParser():
     """
@@ -18,7 +19,7 @@ def setParser():
     """
     parser = argparse.ArgumentParser(
         prog="Nussinov Algorithm Solver",
-        description="A program that runs Nussinov's Algorithm on a given RNA strand and returns the most viable parings."
+        description="A program that runs Nussinov's Algorithm on a given RNA strand and returns the most viable pairings."
     )
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-f", "--filepath", help="the path to a text file with a sequence")
@@ -66,7 +67,7 @@ def isSequenceValid(sequence):
     return set(sequence).issubset(allowed_chars)
 
 
-def cost_function(a, b):
+def costFunction(a, b):
     """
     Determines the cost associated with a pair, 1 if in valid pairs, else 0
     This function gives 1 cost to UG pairs as well
@@ -78,7 +79,10 @@ def cost_function(a, b):
     Returns:
         int: 1 if in valid pairs else 0
     """
-    pairs = [('G', 'C'), ('C', 'G'), ('A', 'U'), ('U', 'A'), ('G', 'U'), ('U', 'G')]
+    pairs = [('G', 'C'), ('C', 'G'), ('A', 'U'), ('U', 'A')]
+
+    if UNCOMMON:
+        pairs.append([('G', 'U'), ('U', 'G')])
 
     if (a, b) in pairs:
         return 1
@@ -101,7 +105,7 @@ def classicalNussinov(sequence):
     for d in range(1, len_seq):
         for i in range(len_seq-d):
             j = i+d
-            temp = M[i+1][j-1] + cost_function(sequence[i], sequence[j])
+            temp = M[i+1][j-1] + costFunction(sequence[i], sequence[j])
             for k in range(i, j):
                 temp = max(temp, M[i][k]+M[k+1][j])
             M[i][j] = temp
@@ -130,7 +134,7 @@ def backtrace(sequence, M, P, i, j):
 
     else:
         for k in range(i, j):
-            if cost_function(sequence[k], sequence[j]):
+            if costFunction(sequence[k], sequence[j]):
                 if k-1 < 0:
                     if M[i][j] == M[k+1][j-1]+1:
                         if (k, j) not in P:
