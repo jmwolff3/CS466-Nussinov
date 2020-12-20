@@ -28,6 +28,6 @@ pip install -r requirements.txt
 Include either the `-s` option and a sequence string or `-f` and a filepath to your sequence.
 
 ### Build and run C code
-1. If you are on a mac, install argp: `brew install argp-standalone` or 
+1. If you are on a mac, install argp: `brew install argp-standalone`
 2. Compile: `gcc -largp c_implimentaiton/nussinov.c -o nussinov.o`
 3. Run: `./nussinov.o -s <sequence>`
