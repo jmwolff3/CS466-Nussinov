@@ -25,6 +25,7 @@ def setParser():
     group.add_argument("-f", "--filepath", help="the path to a text file with a sequence")
     group.add_argument("-s", "--sequence", help="the RNA sequence to evaluate")
     parser.add_argument("-v", "--verbose", action="store_true", help="More verbose output")
+    parser.add_argument("-u", "--uncommon", action="store_true", help="Use Uncommon RNA matches (G,U)")
     return parser
 
 
@@ -89,7 +90,7 @@ def costFunction(a, b):
     return 0
 
 
-def classicalNussinov(sequence):
+def classicalNussinov(sequence, common=True):
     """
     Nussinov's Algorithm
 
@@ -99,6 +100,9 @@ def classicalNussinov(sequence):
     Returns:
         M (Matrix): a nxn matrix contianing the scores for each index
     """
+    if not common:
+        UNCOMMON = True
+
     len_seq = len(sequence)
     M = np.zeros((len_seq, len_seq))
 
