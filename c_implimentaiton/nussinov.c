@@ -5,8 +5,6 @@
 #include <argp.h>
 #include <regex.h>
 
-#define DEGUG()
-
 int COMMON = 1;
 
 const char *argp_program_version = "nussinov .1";
@@ -20,8 +18,8 @@ static char args_doc[] = "verbose";
 
  */
 static struct argp_option options[] = {
-    {"verbose", 'v',    0,  0,  "Produce Verbose Output"},
-    {"quiet",   'q',    0,  0,  "Produce No Output"},
+    // {"verbose", 'v',    0,  0,  "Produce Verbose Output"},
+    // {"quiet",   'q',    0,  0,  "Produce No Output"},
     {"sequence",    's',    "SEQUENCE",  0,  "RNA Sequence String"},
     {"uncommon",    'u',    0,  0,  "Use Uncommon Matches"},
     // {"file",    'f',    "FILEPATH",  0,  "Path to file containing RNA Sequence"},
